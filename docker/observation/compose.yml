@@ -1,0 +1,53 @@
+services:
+  grafana:
+    image: grafana/grafana-enterprise:11.5.2
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - observation
+
+  prometheus:
+    image: prom/prometheus:v3.2.0
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - prometheus:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+    networks:
+      - observation
+
+  prometheus-node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.9.0
+    container_name: pm_node_exporter
+    command:
+      - "--path.rootfs=/host"
+    network_mode: host
+    pid: host # ホストのSidecarコンテナとして動作する
+    restart: unless-stopped
+    volumes:
+      - "/:/host:ro,rslave"
+
+  tunnel:
+    image: cloudflare/cloudflared:2025.2.0
+    container_name: cloudflared
+    command:
+      - tunnel
+      - run
+    env_file:
+      - .tunnel.env
+    restart: unless-stopped
+
+volumes:
+  grafana-storage:
+  prometheus:
+
+networks:
+  observation:
