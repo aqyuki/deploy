@@ -1,0 +1,7 @@
+services:
+  bot:
+    container_name: felm-bot
+    image: ghcr.io/aqyuki/felm:v1.3.0
+    restart: unless-stopped
+    env_file:
+      - .env
