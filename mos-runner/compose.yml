@@ -8,3 +8,5 @@ services:
       RUNNER_SCOPE: repo
       # ACCESS_TOKEN: {my personal access token}
       REPO_URL: "https://github.com/aqyuki/mos"
+    env_file:
+      - .env
