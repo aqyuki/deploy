@@ -1,0 +1,10 @@
+services:
+  runner:
+    container_name: mos-runnner
+    restart: unless-stopped
+    image: myoung34/github-runner
+    environment:
+      RUNNER_NAME: mos-self
+      RUNNER_SCOPE: repo
+      # ACCESS_TOKEN: {my personal access token}
+      REPO_URL: "https://github.com/aqyuki/mos"
