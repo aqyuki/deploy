@@ -4,9 +4,15 @@ services:
     restart: unless-stopped
     image: myoung34/github-runner
     environment:
+      RUNNER_WORKDIR: /tmp/runner/work
+      CONFIGURED_ACTIONS_RUNNER_FILES_DIR: /runner/data
       RUNNER_NAME: mos-self
       RUNNER_SCOPE: repo
       # ACCESS_TOKEN: {my personal access token}
       REPO_URL: "https://github.com/aqyuki/mos"
     env_file:
       - .env
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/drive/shared/runner:/runner/data" # required for persistence
+      - "/tmp/runner:/tmp/runner"
